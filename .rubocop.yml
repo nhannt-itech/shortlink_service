@@ -1,27 +1,253 @@
-# Omakase Ruby styling for Rails
-inherit_gem: { rubocop-rails-omakase: rubocop.yml }
+plugins:
+  - rubocop-rails
+  - rubocop-rspec
+  - rubocop-performance
+  - rubocop-rspec_rails
 
-# Merge excludes with inherited config rather than replacing it.
-inherit_mode:
-  merge:
-    - Exclude
-
-# Project-level defaults tuned for Rails services.
 AllCops:
   NewCops: enable
   TargetRubyVersion: 3.4
-  SuggestExtensions: false
+  TargetRailsVersion: 8.1
   Exclude:
-    - "bin/**/*"
-    - "db/schema.rb"
-    - "log/**/*"
-    - "tmp/**/*"
-    - "vendor/**/*"
+    - 'db/schema.rb'
+    - 'db/migrate/**/*'
+    - 'bin/**/*'
+    - 'node_modules/**/*'
+    - 'vendor/**/*'
+    - 'tmp/**/*'
+    - 'log/**/*'
+    - 'public/**/*'
+    - 'storage/**/*'
 
-# Keep code readable while avoiding noisy violations.
+# ─── Layout ──────────────────────────────────────────────────────────────────
+
 Layout/LineLength:
   Max: 120
+  AllowedPatterns:
+    - '\A\s*#'
+    - '\A\s*it '
 
-# Rails apps typically do not require top-level class/module docs.
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: indented
+
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
+
+Layout/HashAlignment:
+  EnforcedColonStyle: table
+  EnforcedHashRocketStyle: table
+
+Layout/EmptyLinesAroundClassBody:
+  EnforcedStyle: empty_lines_except_namespace
+
+Layout/EmptyLinesAroundModuleBody:
+  EnforcedStyle: empty_lines_except_namespace
+
+# ─── Style ───────────────────────────────────────────────────────────────────
+
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+  ConsistentQuotesInMultiline: true
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/FrozenStringLiteralComment:
+  Enabled: true
+  EnforcedStyle: always
+
 Style/Documentation:
   Enabled: false
+
+Style/ClassAndModuleChildren:
+  EnforcedStyle: nested
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInArguments:
+  EnforcedStyleForMultiline: comma
+
+Style/SymbolArray:
+  EnforcedStyle: percent
+
+Style/WordArray:
+  EnforcedStyle: percent
+
+Style/HashSyntax:
+  EnforcedStyle: ruby19
+
+Style/Lambda:
+  EnforcedStyle: literal
+
+Style/BlockDelimiters:
+  EnforcedStyle: line_count_based
+
+Style/RescueStandardError:
+  EnforcedStyle: implicit
+
+# ─── Metrics ─────────────────────────────────────────────────────────────────
+
+Metrics/MethodLength:
+  Max: 20
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+  Exclude:
+    - 'db/migrate/**/*'
+
+Metrics/ClassLength:
+  Max: 200
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+
+Metrics/ModuleLength:
+  Max: 200
+
+Metrics/BlockLength:
+  Max: 30
+  AllowedMethods:
+    - describe
+    - context
+    - shared_examples_for
+    - shared_context
+    - factory
+    - define
+    - namespace
+    - draw
+    - configure
+  Exclude:
+    - 'config/routes.rb'
+    - 'spec/**/*'
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Metrics/ParameterLists:
+  Max: 5
+  CountKeywordArgs: false
+
+# ─── Naming ──────────────────────────────────────────────────────────────────
+Naming/PredicatePrefix:
+  ForbiddenPrefixes:
+    - is_
+    - has_
+    - have_
+
+Naming/AccessorMethodName:
+  Enabled: true
+
+# ─── Rails ───────────────────────────────────────────────────────────────────
+
+Rails/FilePath:
+  EnforcedStyle: slashes
+
+Rails/UnknownEnv:
+  Environments:
+    - production
+    - staging
+    - development
+    - test
+
+Rails/SkipsModelValidations:
+  AllowedMethods:
+    - touch
+
+Rails/HasManyOrHasOneDependent:
+  Enabled: true
+
+Rails/InverseOf:
+  Enabled: true
+
+Rails/NotNullColumn:
+  Enabled: true
+
+Rails/Output:
+  Enabled: true
+
+Rails/OutputSafety:
+  Enabled: true
+
+Rails/FindEach:
+  Enabled: true
+
+Rails/TimeZone:
+  EnforcedStyle: strict
+
+Rails/Date:
+  EnforcedStyle: strict
+
+Rails/HttpPositionalArguments:
+  Enabled: true
+
+# ─── RSpec ───────────────────────────────────────────────────────────────────
+
+RSpec/ExampleLength:
+  Max: 30
+
+RSpec/MultipleExpectations:
+  Max: 5
+
+RSpec/NestedGroups:
+  Max: 4
+
+RSpec/DescribeClass:
+  Enabled: true
+
+RSpec/SpecFilePathFormat:
+  Enabled: false
+
+RSpec/SpecFilePathSuffix:
+  Enabled: true
+
+RSpec/NamedSubject:
+  Enabled: true
+
+RSpec/LeadingSubject:
+  Enabled: true
+
+RSpec/LetSetup:
+  Enabled: true
+
+# ─── Performance ─────────────────────────────────────────────────────────────
+
+Performance/FlatMap:
+  Enabled: true
+
+Performance/SelectMap:
+  Enabled: true
+
+Performance/StringReplacement:
+  Enabled: true
+
+Performance/TimesMap:
+  Enabled: true
+
+Lint/MissingSuper:
+  Enabled: false
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 7
+
+RSpec/DescribedClass:
+  Exclude:
+    - '**/concerns/**/*.rb'
+
+Rails/I18nLocaleTexts:
+  Exclude:
+    - 'spec/**/*.rb'
