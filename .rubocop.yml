@@ -1,8 +1,27 @@
 # Omakase Ruby styling for Rails
 inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
-# Overwrite or add rules to create your own house style
-#
-# # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
-# Layout/SpaceInsideArrayLiteralBrackets:
-#   Enabled: false
+# Merge excludes with inherited config rather than replacing it.
+inherit_mode:
+  merge:
+    - Exclude
+
+# Project-level defaults tuned for Rails services.
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.4
+  SuggestExtensions: false
+  Exclude:
+    - "bin/**/*"
+    - "db/schema.rb"
+    - "log/**/*"
+    - "tmp/**/*"
+    - "vendor/**/*"
+
+# Keep code readable while avoiding noisy violations.
+Layout/LineLength:
+  Max: 120
+
+# Rails apps typically do not require top-level class/module docs.
+Style/Documentation:
+  Enabled: false
