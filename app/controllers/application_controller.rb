@@ -2,33 +2,26 @@
 
 class ApplicationController < ActionController::API
 
-  rescue_from ActionController::ParameterMissing, with: :render_bad_request
-  rescue_from ActiveRecord::RecordInvalid, with: :render_unprocessable_entity
+  include ApiValidatable
 
-  rescue_from ShortLinks::DecodeError, with: :render_bad_request
-  rescue_from ShortLinks::InvalidUrlError, with: :render_unprocessable_entity_message
-  rescue_from ShortLinks::NotFoundError, with: :render_not_found
+  rescue_from StandardError, with: :handle_internal_server_error
+  rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
+  rescue_from ValidationError, with: :handle_validation_error
 
   private
 
-  def render_bad_request(error)
-    render_error(error.message, :bad_request)
+  def render_success(data)
+    render json: data, status: :ok
   end
 
-  def render_unprocessable_entity_message(error)
-    render_error(error.message, :unprocessable_entity)
+  def handle_not_found
+    render json: { error: 'Not Found' }, status: :not_found
   end
 
-  def render_unprocessable_entity(error)
-    render_error(error.record.errors.full_messages.to_sentence, :unprocessable_entity)
-  end
+  def handle_internal_server_error(exception)
+    Rails.logger.error(exception.full_message)
 
-  def render_not_found(error)
-    render_error(error.message, :not_found)
-  end
-
-  def render_error(message, status)
-    render json: { error: message }, status: status
+    render json: { error: 'Internal Server Error' }, status: :internal_server_error
   end
 
 end

@@ -10,20 +10,13 @@ module ShortLinks
     class << self
 
       def encode(id)
-        Base62Codec.encode(IdObfuscator.obfuscate(id)).rjust(MIN_CODE_LENGTH, PADDING_CHARACTER)
+        obfuscated_id = IdObfuscator.obfuscate(id)
+        Base62Codec.encode(obfuscated_id).rjust(MIN_CODE_LENGTH, PADDING_CHARACTER)
       end
 
       def decode(code)
-        token = code.to_s.strip
-        raise DecodeError, 'short code is missing'                      if token.empty?
-        raise DecodeError, 'short code contains unsupported characters' unless token.match?(Base62Codec::TOKEN_PATTERN)
-
-        id = IdObfuscator.deobfuscate(Base62Codec.decode(strip_padding(token)))
-        raise DecodeError, 'short code is invalid' if id <= 0
-
-        id
-      rescue ArgumentError => e
-        raise DecodeError, e.message
+        base62_decoded = Base62Codec.decode(strip_padding(code.strip))
+        IdObfuscator.deobfuscate(base62_decoded)
       end
 
       private

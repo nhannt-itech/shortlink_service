@@ -1,0 +1,116 @@
+---
+openapi: 3.0.1
+info:
+  title: ShortLink API
+  version: v1
+  description: URL encoding and decoding API
+servers:
+- url: http://localhost:3000
+  description: Local server
+paths:
+  "/encode":
+    post:
+      summary: Create short URL from original URL
+      tags:
+      - ShortLinks
+      parameters: []
+      responses:
+        '200':
+          description: same normalized URL returns the same short URL
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/EncodeResponse"
+        '422':
+          description: required URL parameter is missing
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/EncodeRequest"
+  "/decode":
+    post:
+      summary: Decode short URL or short code to original URL
+      tags:
+      - ShortLinks
+      parameters: []
+      responses:
+        '200':
+          description: raw short code is accepted
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/DecodeResponse"
+        '404':
+          description: short URL does not exist
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/NotFoundResponse"
+        '422':
+          description: required code parameter is missing
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/DecodeRequest"
+components:
+  schemas:
+    EncodeRequest:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          format: uri
+    EncodeResponse:
+      type: object
+      required:
+      - short_url
+      properties:
+        short_url:
+          type: string
+          format: uri
+    DecodeRequest:
+      type: object
+      required:
+      - code
+      properties:
+        code:
+          type: string
+    DecodeResponse:
+      type: object
+      required:
+      - url
+      properties:
+        url:
+          type: string
+          format: uri
+    ErrorResponse:
+      type: object
+      required:
+      - errors
+      properties:
+        errors:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+    NotFoundResponse:
+      type: object
+      required:
+      - error
+      properties:
+        error:
+          type: string
+          example: Not Found

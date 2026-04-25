@@ -3,35 +3,32 @@
 module ShortLinks
   class EncodeService < BaseService
 
-    def initialize(raw_url)
-      @raw_url = raw_url
+    def initialize(url)
+      @url = url.strip
     end
 
     def call
-      normalized_url = UrlNormalizer.normalize!(@raw_url)
-
-      find_existing_link(normalized_url) || create_short_link!(normalized_url)
+      find_existing || create_record
     rescue ActiveRecord::RecordNotUnique
-      find_existing_link(normalized_url)
+      find_existing
     end
 
     private
 
-    def find_existing_link(url)
-      ShortLink.find_by(original_url: url)
+    def find_existing
+      ShortLink.find_by(original_url: @url)
     end
 
-    def create_short_link!(url)
+    def create_record
       id   = next_short_link_id
       code = ShortCodeCodec.encode(id)
 
-      ShortLink.create!(id: id, original_url: url, code: code)
+      ShortLink.create!(id: id, original_url: @url, code: code)
     end
 
     def next_short_link_id
       ShortLink.connection.select_value(
-        format("SELECT nextval('%<sequence>s')",
-               sequence: ShortLink.sequence_name),
+        format("SELECT nextval('%<sequence>s')", sequence: ShortLink.sequence_name),
       ).to_i
     end
 
