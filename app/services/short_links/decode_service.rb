@@ -12,8 +12,9 @@ module ShortLinks
 
       return cached_short_link if cached_short_link.present?
 
-      expected_id = ShortCodeCodec.decode(@code)
-      short_link  = ShortLink.find_by!(id: expected_id, code: @code)
+      short_link_id = ShortCodeCodec.decode(@code)
+      short_link    = ShortLink.find_by!(id: short_link_id, code: @code)
+
       ShortLinks::Cache.write(short_link)
     end
 

@@ -4,15 +4,29 @@ module ShortLinks
   class ShortCodeCodec
     class IdObfuscator
 
-      XOR_KEY = 0x5A17_3F21
+      PRIME    = 0x9E37_79B9
+      INVERSE  = 0x1FDA_3B19
+      XOR_KEY  = 0x5A17_3F21
+      MASK     = 0xFFFF_FFFF
 
       class << self
 
         def obfuscate(id)
-          id.to_i ^ XOR_KEY
+          n = id.to_i
+          n = (n ^ (n >> 16)) & MASK
+          n = (n * PRIME)     & MASK
+          n = (n ^ (n >> 16)) & MASK
+
+          n ^ XOR_KEY
         end
 
-        alias deobfuscate obfuscate
+        def deobfuscate(code)
+          n = code.to_i ^ XOR_KEY
+          n = (n ^ (n >> 16))  & MASK
+          n = (n * INVERSE)    & MASK
+
+          (n ^ (n >> 16)) & MASK
+        end
 
       end
 
