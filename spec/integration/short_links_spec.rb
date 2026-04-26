@@ -34,6 +34,20 @@ RSpec.describe 'ShortLinks API', type: :request do # rubocop:disable RSpec/Empty
         end
       end
 
+      response '200', 'URL variants normalize to the same short URL' do
+        schema '$ref' => '#/components/schemas/EncodeResponse'
+        let(:payload) { { url: 'HTTPS://Example.COM:443/docs/../docs?q=1' } }
+
+        run_test! do
+          first_short_url = response.parsed_body.fetch('short_url')
+
+          post '/encode', params: { url: 'https://example.com/docs?q=1' }, as: :json
+          second_short_url = response.parsed_body.fetch('short_url')
+
+          expect(first_short_url).to eq(second_short_url)
+        end
+      end
+
       response '422', 'URL scheme is invalid' do
         schema '$ref' => '#/components/schemas/ErrorResponse'
         let(:payload) { { url: 'ftp://example.com/file.txt' } }

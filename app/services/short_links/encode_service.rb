@@ -4,7 +4,7 @@ module ShortLinks
   class EncodeService < BaseService
 
     def initialize(url)
-      @url = url.strip
+      @url = Addressable::URI.parse(url.strip).normalize.to_s
     end
 
     def call
@@ -27,9 +27,9 @@ module ShortLinks
     end
 
     def next_short_link_id
-      ShortLink.connection.select_value(
-        format("SELECT nextval('%<sequence>s')", sequence: ShortLink.sequence_name),
-      ).to_i
+      ShortLink.connection
+        .select_value("SELECT nextval('#{ShortLink.sequence_name}')")
+        .to_i
     end
 
   end
