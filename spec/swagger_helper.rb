@@ -13,12 +13,6 @@ RSpec.configure do |config|
         version:     'v1',
         description: 'URL encoding and decoding API',
       },
-      servers:    [
-        {
-          url:         'http://localhost:3000',
-          description: 'Local server',
-        },
-      ],
       paths:      {},
       components: {
         schemas: {

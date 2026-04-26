@@ -4,9 +4,6 @@ info:
   title: ShortLink API
   version: v1
   description: URL encoding and decoding API
-servers:
-- url: http://localhost:3000
-  description: Local server
 paths:
   "/encode":
     post:
@@ -16,7 +13,7 @@ paths:
       parameters: []
       responses:
         '200':
-          description: same normalized URL returns the same short URL
+          description: URL variants normalize to the same short URL
           content:
             application/json:
               schema:
