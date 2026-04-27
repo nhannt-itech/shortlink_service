@@ -5,7 +5,7 @@ module ShortLinks
     class IdObfuscator
 
       PRIME    = 0x9E37_79B9
-      INVERSE  = 0x1FDA_3B19
+      INVERSE  = 0x144C_BC89
       XOR_KEY  = 0x5A17_3F21
       MASK     = 0xFFFF_FFFF
 
