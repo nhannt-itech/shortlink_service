@@ -27,9 +27,10 @@ module ShortLinks
     end
 
     def next_short_link_id
-      ShortLink.connection
-        .select_value("SELECT nextval('#{ShortLink.sequence_name}')")
-        .to_i
+      connection = ShortLink.connection
+      quoted_sequence_name = connection.quote(ShortLink.sequence_name)
+
+      connection.select_value("SELECT nextval(#{quoted_sequence_name}::regclass)").to_i
     end
 
   end
