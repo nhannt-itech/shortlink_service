@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -107,7 +107,7 @@
   <body>
     <div class="container">
       <h1 class="title">ShortLink Feature Demo</h1>
-      <p class="subtitle">Use this page to demonstrate URL encoding and decoding to clients.</p>
+      <p class="subtitle">Use this page to demonstrate URL encoding and decoding.</p>
 
       <div class="grid">
         <section class="card">
@@ -147,11 +147,11 @@
           body = { error: "Invalid JSON response" };
         }
 
-        return { ok: response.ok, status: response.status, body };
+        return { ok: response.ok, body };
       }
 
-      function pretty(data) {
-        return JSON.stringify(data, null, 2);
+      function pretty(value) {
+        return JSON.stringify(value, null, 2);
       }
 
       document.getElementById("encode-btn").addEventListener("click", async () => {
@@ -168,8 +168,8 @@
         target.textContent = pretty(result.body);
 
         if (result.ok && result.body.short_url) {
-          const shortCode = result.body.short_url.split("/").pop();
-          document.getElementById("decode-code").value = shortCode || "";
+          const code = result.body.short_url.split("/").pop();
+          document.getElementById("decode-code").value = code || "";
         }
       });
 
