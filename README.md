@@ -96,7 +96,7 @@ This implementation is intentionally simple for the assignment, but the design l
 
 Because codes are derived from unique database IDs, normal random collisions are avoided. This is simpler and more reliable than generating random strings and retrying on collision.
 
-The current obfuscator uses a 32-bit mask. For extremely large scale beyond that range, the codec should be upgraded to a 64-bit obfuscation strategy before the ID space is exhausted.
+The current obfuscator uses a 64-bit reversible mapping, so it supports a significantly larger ID space and delays ID-space pressure at higher scale.
 
 ### Horizontal Scaling
 
