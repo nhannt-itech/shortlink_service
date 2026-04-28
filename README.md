@@ -11,17 +11,17 @@ Detailed setup and execution steps are available in [`RUNNING.md`](RUNNING.md).
 
 ## Technology Stack
 
-- Ruby `3.4.7`
-- Rails `8.1`
-- PostgreSQL
-- Dry Validation for request contracts
-- Addressable for URL normalization
-- RSpec and Rswag for API tests and OpenAPI generation
-- Rails cache for decode-path caching
+- [Ruby](https://www.ruby-lang.org/en/) `3.4.7`
+- [Ruby on Rails](https://rubyonrails.org/) `8.1`
+- [PostgreSQL](https://www.postgresql.org/)
+- [Dry Validation](https://dry-rb.org/gems/dry-validation/) for request contracts
+- [Addressable](https://github.com/sporkmonger/addressable) for URL normalization
+- [RSpec](https://rspec.info/) and [Rswag](https://github.com/rswag/rswag) for API tests and OpenAPI generation
+- [Rails caching](https://guides.rubyonrails.org/caching_with_rails.html) (`Rails.cache`) for decode-path caching
 
 ## Short Code Strategy
 
-The implementation avoids random code generation. Instead, it generates codes deterministically from database IDs:
+The implementation avoids random code generation. Instead, it generates codes deterministically from database IDs.
 
 1. PostgreSQL allocates a unique record ID.
 2. The ID is obfuscated to avoid exposing raw sequential IDs.
